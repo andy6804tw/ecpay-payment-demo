@@ -13,7 +13,7 @@ https://ecpay-payment.herokuapp.com/
 ### 1. 結帳頁面
 **方法:** GET
 
-**說明:** *登入時可在 body 存放 payload*
+**說明:** *經由綠界取得收付款服務*
 
 **路徑:** *`llocalhost:1337/api/ecpay/?total=:total&item=:item`*
 
@@ -32,7 +32,7 @@ https://ecpay-payment.herokuapp.com/
 
 ### 信用卡付款
 
-##### 1. 輸入信用卡資訊及手機號碼
+##### 1. 輸入信用卡資訊及手機號碼
 
 - 信用卡測試卡號
 ```json
@@ -45,15 +45,15 @@ https://ecpay-payment.herokuapp.com/
 
 <img src="./Screenshot/img1-1.png">
 
-##### 2. 刷卡簡訊驗證
+##### 2. 刷卡簡訊驗證
 
-> Note: 每組簡訊驗證碼有效期限10分鐘
+> Note: 每組簡訊驗證碼有效期限10分鐘
 
 <img src="./Screenshot/img1-2.png">
 
-##### 3. 付款成功
+##### 3. 付款成功
 
-付款成功後會顯示成功頁面，且付款驗證同時會進入 `ReturnURL` 與 `OrderResultURL` 做 callback 動作，開發者必須自定義 callback 內容。
+付款成功後會顯示成功頁面，且付款驗證同時會進入 `ReturnURL` 與 `OrderResultURL` 做 callback 動作，開發者必須自定義 callback 內容。
 
 <img src="./Screenshot/img1-3.png">
 
