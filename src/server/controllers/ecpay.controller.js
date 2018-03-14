@@ -1,4 +1,5 @@
 const random = require('crypto-string-module');
+const moment = require('moment');
 
 /**
  * Created by ying.wu on 2017/6/27.
@@ -9,40 +10,61 @@ const EcpayPayment = require('ecpay-payment');
 let baseParam = {};
 // 若要測試開立電子發票，請將inv_params內的"所有"參數取消註解 //
 const invParams = {};
-
+// 時間
+const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
+console.log(currentDateTime);
 const initParm = (total, item) => {
   baseParam = {
     MerchantTradeNo: random.RandomChar(20), // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
-    MerchantTradeDate: '2017/02/13 15:45:30', // ex: 2017/02/13 15:45:30
+    MerchantTradeDate: currentDateTime, // ex: YYYY/MM/DD HH:mm:ss
     TotalAmount: total,
     TradeDesc: 'Quapni前打輪系列',
     ItemName: item,
-    ReturnURL: 'https://55e9298f.ngrok.io/result',
-    InvoiceMark: 'Y',
-    // ChooseSubPayment: '',
-    // OrderResultURL: 'https://f7d2cb15.ngrok.io/payment_result',
+    ReturnURL: 'https://b0a262db.ngrok.io/api/ecpay/result', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
+    InvoiceMark: 'Y', // 電子發票開立註記
+    // ChoosePayment: 'ALL', // 選擇預設付款方式
+    // IgnorePayment: 'CVS#BARCODE', // 隱藏付款方式
+    // OrderResultURL: 'https://f7d2cb15.ngrok.io/payment_result', // 付款完成渲染頁面
     // NeedExtraPaidInfo: '1',
-    // ClientBackURL: 'https://www.google.com',
+    ClientBackURL: 'https://www.google.com', // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
     Remark: '交易備註',
     // HoldTradeAMT: '1',
     // StoreID: '',
-    CustomField1: '紅色一'
+    CustomField1: '紅色一',
     // CustomField2: '',
     // CustomField3: '',
     // CustomField4: ''
+    EncryptType: '1', // CheckMacValue 加密類型
+    ExpireDate: '7' // 允許繳費有效天數
   };
 };
 
 
 const payment = (req, res) => {
-  initParm(req.query.total, req.query.item);
+  //initParm(req.query.total, req.query.item);
+  initParm(req.body.total, req.body.item);
+  console.log(req.body);
   const create = new EcpayPayment();
   const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
   // console.log(htm)
   res.send(htm);
 };
 
+const getPayment = (req, res) => {
+  initParm(req.query.total, req.query.item);
+  const create = new EcpayPayment();
+  const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
+  res.send(htm);
+};
+
+const result = (req, res) => {
+  console.log('完成');
+  res.send('1|OK');
+};
+
 export default {
-  payment
+  payment,
+  getPayment,
+  result
 };

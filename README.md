@@ -10,15 +10,32 @@ https://ecpay-payment.herokuapp.com/
 - For more detail about ecpy's document: https://www.ecpay.com.tw/Content/files/ecpay_011.pdf
 
 ## 路徑(Router)
-### 1. 結帳頁面
+### 1. 結帳頁面(網頁跳轉夾帶值方法)
 **方法:** GET
 
-**說明:** *經由綠界取得收付款服務*
+**說明:** *經由綠界取得收付款服務(網頁跳轉夾帶值方法)*
 
-**路徑:** *`llocalhost:1337/api/ecpay/?total=:total&item=:item`*
+**路徑:** *`llocalhost:1337/api/ecpay/get?total=:total&item=:item`*
 
 - [範例] URL parameter 
-  - localhost:1337/api/ecpay/?total=4200&item=山茶 CAMELLA 85T 前打捲線器
+  - localhost:1337/api/get/ecpay?total=4200&item=山茶 CAMELLA 85T 前打捲線器
+
+### 2. 結帳頁面(表單傳送方法)
+**方法:** POST
+
+**說明:** *經由綠界取得收付款服務(表單傳送方法)*
+
+**路徑:** *`llocalhost:1337/api/ecpay`*
+
+- Parameters (body):
+```json
+// form-data
+
+total: 4200
+item: 山茶 CAMELLA 85T 前打捲線器
+```
+
+[範例測試](https://codepen.io/andy6804tw/full/EEPQqz/)
 
 ## 功能(Feature)
 - 付款方式
@@ -29,6 +46,16 @@ https://ecpay-payment.herokuapp.com/
   - 超商代碼
 
 <img src="./Screenshot/img01.png">
+
+## 功能(Feature)
+- 付款方式
+  - 信用卡
+  - 網路 ATM
+  - ATM 櫃員機
+  - 超商條碼
+  - 超商代碼
+
+
 
 ### 信用卡付款
 
@@ -56,6 +83,13 @@ https://ecpay-payment.herokuapp.com/
 付款成功後會顯示成功頁面，且付款驗證同時會進入 `ReturnURL` 與 `OrderResultURL` 做 callback 動作，開發者必須自定義 callback 內容。
 
 <img src="./Screenshot/img1-3.png">
+
+### 網路 ATM
+- 網路銀行
+
+  - 兆豐國際商銀、台灣土地銀行、新光銀行、永豐銀行、台灣銀行、國泰世華銀行、中國信託、玉山銀行、第一銀行、台北富邦、台新銀行、其他金融機構。
+
+> Note:若使用其他金融機構進行轉帳，可至任一銀行之櫃員機操作，另須支付跨行手續費 15 元。
 
 ## LICENSE 
 MIT
