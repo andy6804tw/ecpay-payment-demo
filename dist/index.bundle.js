@@ -517,8 +517,7 @@ const result = (req, res) => {
 
 "use strict";
 const nodemailer = __webpack_require__(17);
-// require('dotenv').config();
-
+__webpack_require__(2).config();
 
 const sendMail = data => {
   const transporter = nodemailer.createTransport({
@@ -537,7 +536,7 @@ const sendMail = data => {
     to: data.CustomField2,
     subject: 'Quapni測試信件',
     text: `${data.CustomField1} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.TradeAmt}
-    訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.CustomField4} \r\n 宅配地址: ${data.CustomField3}
+訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.CustomField4} \r\n 宅配地址: ${data.CustomField3}
     
 如有任何問題，也歡迎使用客服信箱聯絡我們，我們將竭誠為您服務。
 客服信箱： service@quapni.com.tw
