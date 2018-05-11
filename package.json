@@ -1,6 +1,6 @@
 {
   "name": "restful_api_start_kit",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "main": "src/index.js",
   "repository": "https://github.com/andy6804tw/RESTful_API_start_kit.git",
   "author": "Tsai Yi Lin <andy6804tw@yahoo.com.tw>",
@@ -25,7 +25,8 @@
     "jsonwebtoken": "^8.1.0",
     "moment": "^2.21.0",
     "morgan": "^1.9.0",
-    "mysql": "^2.15.0"
+    "mysql": "^2.15.0",
+    "nodemailer": "^4.6.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

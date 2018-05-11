@@ -1,5 +1,8 @@
+import ecpayCtrl from '../modules/ecpay.module';
+
 const random = require('crypto-string-module');
 const moment = require('moment');
+
 
 /**
  * Created by ying.wu on 2017/6/27.
@@ -13,14 +16,14 @@ const invParams = {};
 // 時間
 const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
 console.log(currentDateTime);
-const initParm = (total, item) => {
+const initParm = (data) => {
   baseParam = {
     MerchantTradeNo: random.RandomChar(20), // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
     MerchantTradeDate: currentDateTime, // ex: YYYY/MM/DD HH:mm:ss
-    TotalAmount: total,
+    TotalAmount: data.total,
     TradeDesc: 'Quapni前打輪系列',
-    ItemName: item,
-    ReturnURL: 'https://b0a262db.ngrok.io/api/ecpay/result', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
+    ItemName: data.item,
+    ReturnURL: 'https://ecpay-payment.herokuapp.com/api/ecpay/result', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
     InvoiceMark: 'Y', // 電子發票開立註記
     // ChoosePayment: 'ALL', // 選擇預設付款方式
     // IgnorePayment: 'CVS#BARCODE', // 隱藏付款方式
@@ -31,10 +34,10 @@ const initParm = (total, item) => {
     Remark: '交易備註',
     // HoldTradeAMT: '1',
     // StoreID: '',
-    CustomField1: '紅色一',
-    // CustomField2: '',
-    // CustomField3: '',
-    // CustomField4: ''
+    CustomField1: data.name,
+    CustomField2: data.email,
+    CustomField3: data.address,
+    CustomField4: data.item,
     EncryptType: '1', // CheckMacValue 加密類型
     ExpireDate: '7' // 允許繳費有效天數
   };
@@ -42,9 +45,8 @@ const initParm = (total, item) => {
 
 
 const payment = (req, res) => {
-  //initParm(req.query.total, req.query.item);
-  initParm(req.body.total, req.body.item);
-  console.log(req.body);
+  // initParm(req.query.total, req.query.item);
+  initParm(req.body);
   const create = new EcpayPayment();
   const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
   // console.log(htm)
@@ -52,7 +54,7 @@ const payment = (req, res) => {
 };
 
 const getPayment = (req, res) => {
-  initParm(req.query.total, req.query.item);
+  initParm(req.query);
   const create = new EcpayPayment();
   const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
   res.send(htm);
@@ -60,8 +62,10 @@ const getPayment = (req, res) => {
 
 const result = (req, res) => {
   console.log('完成');
+  ecpayCtrl.sendMail(req.body);
   res.send('1|OK');
 };
+
 
 export default {
   payment,
