@@ -517,7 +517,8 @@ const result = (req, res) => {
 
 "use strict";
 const nodemailer = __webpack_require__(17);
-__webpack_require__(2).config();
+// require('dotenv').config();
+
 
 const sendMail = data => {
   const transporter = nodemailer.createTransport({
