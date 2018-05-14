@@ -3,6 +3,8 @@ import ecpayCtrl from '../modules/ecpay.module';
 const random = require('crypto-string-module');
 const moment = require('moment');
 
+// 交易訊息
+let bodyData;
 
 /**
  * Created by ying.wu on 2017/6/27.
@@ -46,7 +48,8 @@ const initParm = (data) => {
 
 const payment = (req, res) => {
   // initParm(req.query.total, req.query.item);
-  initParm(req.body);
+  bodyData = req.body;
+  initParm(bodyData);
   const create = new EcpayPayment();
   const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
   // console.log(htm)
@@ -62,7 +65,8 @@ const getPayment = (req, res) => {
 
 const result = (req, res) => {
   console.log('完成');
-  ecpayCtrl.sendMail(req.body);
+  // (交易結果, 顧客交易詳細資料)
+  ecpayCtrl.sendMail(req.body, bodyData);
   res.send('1|OK');
 };
 

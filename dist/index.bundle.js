@@ -444,6 +444,9 @@ router.route('/result').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_cont
 const random = __webpack_require__(18);
 const moment = __webpack_require__(19);
 
+// 交易訊息
+let bodyData;
+
 /**
  * Created by ying.wu on 2017/6/27.
  */
@@ -485,7 +488,8 @@ const initParm = data => {
 
 const payment = (req, res) => {
   // initParm(req.query.total, req.query.item);
-  initParm(req.body);
+  bodyData = req.body;
+  initParm(bodyData);
   const create = new EcpayPayment();
   const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
   // console.log(htm)
@@ -501,7 +505,8 @@ const getPayment = (req, res) => {
 
 const result = (req, res) => {
   console.log('完成');
-  __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].sendMail(req.body);
+  // (交易結果, 顧客交易詳細資料)
+  __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].sendMail(req.body, bodyData);
   res.send('1|OK');
 };
 
@@ -519,7 +524,7 @@ const result = (req, res) => {
 const nodemailer = __webpack_require__(17);
 __webpack_require__(2).config();
 
-const sendMail = data => {
+const sendMail = (body, data) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     auth: {
@@ -533,10 +538,10 @@ const sendMail = data => {
   // Setup mail configuration
   const mailOptions = {
     from: `Quapni-康迪薾戶外 <${process.env.EMAIL}>`,
-    to: data.CustomField2,
+    to: data.email,
     subject: 'Quapni測試信件',
-    text: `${data.CustomField1} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.TradeAmt}
-訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.CustomField4} \r\n 宅配地址: ${data.CustomField3}
+    text: `${data.name} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.total}
+訂單編號: ${body.MerchantTradeNo} \r\n 購買商品: ${data.item} \r\n 宅配地址: ${data.address} \r\n
     
 如有任何問題，也歡迎使用客服信箱聯絡我們，我們將竭誠為您服務。
 客服信箱： service@quapni.com.tw

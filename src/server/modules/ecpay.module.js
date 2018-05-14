@@ -2,7 +2,7 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 
-const sendMail = (data) => {
+const sendMail = (body, data) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     auth: {
@@ -16,10 +16,10 @@ const sendMail = (data) => {
   // Setup mail configuration
   const mailOptions = {
     from: `Quapni-康迪薾戶外 <${process.env.EMAIL}>`,
-    to: data.CustomField2,
+    to: data.email,
     subject: 'Quapni測試信件',
-    text: `${data.CustomField1} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.TradeAmt}
-訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.CustomField4} \r\n 宅配地址: ${data.CustomField3}
+    text: `${data.name} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.total}
+訂單編號: ${body.MerchantTradeNo} \r\n 購買商品: ${data.item} \r\n 宅配地址: ${data.address} \r\n
     
 如有任何問題，也歡迎使用客服信箱聯絡我們，我們將竭誠為您服務。
 客服信箱： service@quapni.com.tw
