@@ -37,7 +37,7 @@ const initParm = (data) => {
     CustomField1: data.name,
     CustomField2: data.email,
     CustomField3: data.address,
-    CustomField4: data.item,
+    // CustomField4: data.item,
     EncryptType: '1', // CheckMacValue 加密類型
     ExpireDate: '7' // 允許繳費有效天數
   };
