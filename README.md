@@ -15,17 +15,17 @@ https://ecpay-payment.herokuapp.com/
 
 **說明:** *經由綠界取得收付款服務(網頁跳轉夾帶值方法)*
 
-**路徑:** *`llocalhost:1337/api/ecpay/get?total=:total&item=:item`*
+**路徑:** *`https://ecpay-payment.herokuapp.com/api/ecpay/get?total=:total&item=:item`*
 
 - [範例] URL parameter 
-  - localhost:1337/api/get/ecpay?total=4200&item=山茶 CAMELLA 85T 前打捲線器
+  - https://ecpay-payment.herokuapp.com/api/ecpay/get?total=4200&item=山茶 CAMELLA 85T 前打捲線器&name=王小明&address=台中市&email=andy6804tw@yahoo.com.tw&note=無
 
 ### 2. 結帳頁面(表單傳送方法)
 **方法:** POST
 
 **說明:** *經由綠界取得收付款服務(表單傳送方法)*
 
-**路徑:** *`llocalhost:1337/api/ecpay`*
+**路徑:** *`https://ecpay-payment.herokuapp.com/api/ecpay`*
 
 - Parameters (body):
 ```json
@@ -36,6 +36,18 @@ item: 山茶 CAMELLA 85T 前打捲線器
 ```
 
 [範例測試](https://codepen.io/andy6804tw/full/EEPQqz/)
+
+### 3. 查詢訂單
+**方法:** GET
+
+**說明:** *使用訂單編號做訂單查詢*
+
+**路徑:** *`https://ecpay-payment.herokuapp.com/api/ecpay/queryTradeInfo?merchantTradeNo=訂單編號`*
+
+- [範例] URL parameter 
+  - https://ecpay-payment.herokuapp.com/api/ecpay/queryTradeInfo?merchantTradeNo=vbqg6003rqrn6zace1cr
+
+[參考文件](https://hackmd.io/901APtwTRFCRCx1TL0byOQ)
 
 ## 功能(Feature)
 - 付款方式
