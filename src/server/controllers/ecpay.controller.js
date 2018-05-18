@@ -25,13 +25,13 @@ const initParm = (data) => {
     TotalAmount: data.total,
     TradeDesc: 'Quapni前打輪系列',
     ItemName: data.item,
-    ReturnURL: 'https://ecpay-payment.herokuapp.com/api/ecpay/result', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
+    ReturnURL: 'https://ecpay-payment.herokuapp.com/api/ecpay/results', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
     InvoiceMark: 'Y', // 電子發票開立註記
     // ChoosePayment: 'ALL', // 選擇預設付款方式
     // IgnorePayment: 'CVS#BARCODE', // 隱藏付款方式
-    // OrderResultURL: 'https://f7d2cb15.ngrok.io/payment_result', // 付款完成渲染頁面
+    // OrderResultURL: 'https://77733700.ngrok.io/api/ecpay/test', // 付款完成渲染頁面
     // NeedExtraPaidInfo: '1',
-    ClientBackURL: 'https://www.google.com', // 付款完成頁面button返回商店網址
+    ClientBackURL: 'https://quapni.com', // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
     Remark: '交易備註',
     // HoldTradeAMT: '1',
@@ -63,16 +63,29 @@ const getPayment = (req, res) => {
   res.send(htm);
 };
 
-const result = (req, res) => {
+const results = (req, res) => {
   console.log('完成');
   // (交易結果, 顧客交易詳細資料)
   ecpayCtrl.sendMail(req.body, bodyData);
   res.send('1|OK');
 };
 
+const tradeInfo = (req, res) => {
+  ecpayCtrl.queryTradeInfo(req.query.merchantTradeNo).then((result) => {
+    console.log(result);
+    res.send(result);
+  });
+};
+
+const test = (req, res) => {
+  res.location('http://192.168.11.5:3000/checkout');
+  res.sendStatus(302);
+};
 
 export default {
   payment,
   getPayment,
-  result
+  results,
+  tradeInfo,
+  test
 };

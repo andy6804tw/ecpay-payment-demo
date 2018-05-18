@@ -9,8 +9,14 @@ router.route('/')
 router.route('/get')
   .get(ecpayCtrl.getPayment);
 
-router.route('/result')
-  .post(ecpayCtrl.result);
+router.route('/results')
+  .post(ecpayCtrl.results);
+
+router.route('/queryTradeInfo')
+  .get(ecpayCtrl.tradeInfo);
+
+router.route('/test')
+  .post(ecpayCtrl.test);
 
 
 export default router;

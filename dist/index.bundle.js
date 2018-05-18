@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -69,7 +69,7 @@ module.exports =
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_joi__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_joi__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_joi___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_joi__);
 
 
@@ -127,12 +127,18 @@ module.exports = require("http-status");
 
 /***/ }),
 /* 4 */
+/***/ (function(module, exports) {
+
+module.exports = require("moment");
+
+/***/ }),
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_config__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config_express__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config_express__ = __webpack_require__(8);
 
 
 
@@ -144,10 +150,10 @@ if (!module.parent) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (__WEBPACK_IMPORTED_MODULE_1__config_express__["a" /* default */]);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -177,31 +183,31 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = require("joi");
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_body_parser__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_body_parser__ = __webpack_require__(9);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_body_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_body_parser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cors__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cors__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_cors__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_morgan__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_morgan__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_morgan___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_morgan__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_http_status__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_http_status__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_express_validation__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_express_validation__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_express_validation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_express_validation__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__server_helper_AppError__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__server_helper_AppError__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__config__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__server_routes_index_route__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__server_routes_index_route__ = __webpack_require__(14);
 
 
 
@@ -263,31 +269,31 @@ app.use((err, req, res, next) => {
 /* harmony default export */ __webpack_exports__["a"] = (app);
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = require("cors");
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = require("morgan");
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-validation");
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -386,13 +392,13 @@ class LoginError2 extends ExtendableError {
 });
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ecpay_route__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__ecpay_route__ = __webpack_require__(15);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config_config__ = __webpack_require__(0);
 
 // Router
@@ -413,13 +419,13 @@ router.use('/ecpay', __WEBPACK_IMPORTED_MODULE_1__ecpay_route__["a" /* default *
 /* harmony default export */ __webpack_exports__["a"] = (router);
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__ = __webpack_require__(16);
 
 
 
@@ -429,20 +435,24 @@ router.route('/').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller
 
 router.route('/get').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].getPayment);
 
-router.route('/result').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].result);
+router.route('/results').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].results);
+
+router.route('/queryTradeInfo').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].tradeInfo);
+
+router.route('/test').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].test);
 
 /* harmony default export */ __webpack_exports__["a"] = (router);
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__ = __webpack_require__(16);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__ = __webpack_require__(17);
 
 
-const random = __webpack_require__(18);
-const moment = __webpack_require__(19);
+const random = __webpack_require__(22);
+const moment = __webpack_require__(4);
 
 // 交易訊息
 let bodyData;
@@ -450,7 +460,7 @@ let bodyData;
 /**
  * Created by ying.wu on 2017/6/27.
  */
-const EcpayPayment = __webpack_require__(20);
+const EcpayPayment = __webpack_require__(23);
 // 參數值為[PLEASE MODIFY]者，請在每次測試時給予獨特值
 // 若要測試非必帶參數請將base_param內註解的參數依需求取消註解 //
 let baseParam = {};
@@ -466,13 +476,13 @@ const initParm = data => {
     TotalAmount: data.total,
     TradeDesc: 'Quapni前打輪系列',
     ItemName: data.item,
-    ReturnURL: 'https://ecpay-payment.herokuapp.com/api/ecpay/result', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
+    ReturnURL: 'https://ecpay-payment.herokuapp.com/api/ecpay/results', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
     InvoiceMark: 'Y', // 電子發票開立註記
     // ChoosePayment: 'ALL', // 選擇預設付款方式
     // IgnorePayment: 'CVS#BARCODE', // 隱藏付款方式
-    // OrderResultURL: 'https://f7d2cb15.ngrok.io/payment_result', // 付款完成渲染頁面
+    // OrderResultURL: 'https://77733700.ngrok.io/api/ecpay/test', // 付款完成渲染頁面
     // NeedExtraPaidInfo: '1',
-    ClientBackURL: 'https://www.google.com', // 付款完成頁面button返回商店網址
+    ClientBackURL: 'https://quapni.com', // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
     Remark: '交易備註',
     // HoldTradeAMT: '1',
@@ -503,25 +513,43 @@ const getPayment = (req, res) => {
   res.send(htm);
 };
 
-const result = (req, res) => {
+const results = (req, res) => {
   console.log('完成');
   // (交易結果, 顧客交易詳細資料)
   __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].sendMail(req.body, bodyData);
   res.send('1|OK');
 };
 
+const tradeInfo = (req, res) => {
+  __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.query.merchantTradeNo).then(result => {
+    console.log(result);
+    res.send(result);
+  });
+};
+
+const test = (req, res) => {
+  res.location('http://192.168.11.5:3000/checkout');
+  res.sendStatus(302);
+};
+
 /* harmony default export */ __webpack_exports__["a"] = ({
   payment,
   getPayment,
-  result
+  results,
+  tradeInfo,
+  test
 });
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const nodemailer = __webpack_require__(17);
+const nodemailer = __webpack_require__(18);
+const urlencode = __webpack_require__(19);
+const sha256 = __webpack_require__(20);
+const moment = __webpack_require__(4);
+const request = __webpack_require__(21);
 __webpack_require__(2).config();
 
 const sendMail = (body, data) => {
@@ -561,28 +589,78 @@ Quapni-康迪薾戶外 小組敬上`
   });
 };
 
-/* harmony default export */ __webpack_exports__["a"] = ({ sendMail });
+const queryTradeInfo = merchantTradeNo => {
+  return new Promise((resolve, reject) => {
+    const timestamp = moment().valueOf().toString().substring(0, 10);
+    console.log(timestamp);
+    const originString = `HashKey=5294y06JbISpM5x9&MerchantID=2000132&MerchantTradeNo=${merchantTradeNo}&TimeStamp=${timestamp}&HashIV=v77hoKGq4kWxNNIS`;
 
-/***/ }),
-/* 17 */
-/***/ (function(module, exports) {
+    // 將整串字串進行 URL encode (UTF-8小寫)
+    const encodeString = urlencode(originString).toLowerCase();
+    console.log(encodeString);
 
-module.exports = require("nodemailer");
+    // 以 SHA256 加密方式來產生雜凑值(大寫)
+    const sh256String = sha256(encodeString).toUpperCase();
+    console.log(sh256String);
+
+    const formData = {
+      MerchantID: 2000132,
+      MerchantTradeNo: merchantTradeNo,
+      TimeStamp: timestamp,
+      CheckMacValue: sh256String
+    };
+    request.post({ url: 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5', form: formData }, (err, httpResponse, body) => {
+      if (err) {
+        console.error('login failed:', err);
+      }
+      // 登入成功並取得 access_token 回傳
+      console.log(...body.split('&'));
+      const result = body.split('&');
+      const resultObject = result.reduce((acc, item) => {
+        const key = item.split('=')[0];
+        const value = item.split('=')[1];
+        acc[key] = value;
+        return acc;
+      }, {});
+      resolve(resultObject);
+    });
+  });
+};
+
+/* harmony default export */ __webpack_exports__["a"] = ({ sendMail, queryTradeInfo });
 
 /***/ }),
 /* 18 */
 /***/ (function(module, exports) {
 
-module.exports = require("crypto-string-module");
+module.exports = require("nodemailer");
 
 /***/ }),
 /* 19 */
 /***/ (function(module, exports) {
 
-module.exports = require("moment");
+module.exports = require("urlencode");
 
 /***/ }),
 /* 20 */
+/***/ (function(module, exports) {
+
+module.exports = require("sha256");
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports) {
+
+module.exports = require("request");
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports) {
+
+module.exports = require("crypto-string-module");
+
+/***/ }),
+/* 23 */
 /***/ (function(module, exports) {
 
 module.exports = require("ecpay-payment");
