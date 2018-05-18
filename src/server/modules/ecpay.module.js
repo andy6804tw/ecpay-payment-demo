@@ -6,7 +6,7 @@ const request = require('request');
 require('dotenv').config();
 
 
-const sendMail = (body, data) => {
+const sendMail = (data) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     auth: {
@@ -20,10 +20,10 @@ const sendMail = (body, data) => {
   // Setup mail configuration
   const mailOptions = {
     from: `Quapni-康迪薾戶外 <${process.env.EMAIL}>`,
-    to: data.email,
+    to: data.CustomField2,
     subject: 'Quapni測試信件',
-    text: `${data.name} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.total}
-訂單編號: ${body.MerchantTradeNo} \r\n 購買商品: ${data.item} \r\n 宅配地址: ${data.address} \r\n
+    text: `${data.CustomField1} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.TradeAmt}
+訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.ItemName} \r\n 宅配地址: ${data.CustomField3} \r\n
     
 如有任何問題，也歡迎使用客服信箱聯絡我們，我們將竭誠為您服務。
 客服信箱： service@quapni.com.tw
@@ -42,6 +42,33 @@ Quapni-康迪薾戶外 小組敬上`
     }
   });
 };
+// const sendMail = (body) => {
+//   const transporter = nodemailer.createTransport({
+//     host: 'smtp.gmail.com',
+//     auth: {
+//       type: 'OAuth2',
+//       user: process.env.EMAIL,
+//       clientId: process.env.CLIENT_ID,
+//       clientSecret: process.env.CLIENT_SERECT,
+//       refreshToken: process.env.REFLESH_TOKEN
+//     }
+//   });
+//   // Setup mail configuration
+//   const mailOptions = {
+//     from: `Quapni-康迪薾戶外 <${process.env.EMAIL}>`,
+//     to: 'andy6804tw@yahoo.com.tw',
+//     subject: 'Quapni測試信件',
+//     text: `${body}\r\n${JSON.stringify(body)}`
+//   };
+//   // send mail
+//   transporter.sendMail(mailOptions, (error, info) => {
+//     if (error) {
+//       console.log(error);
+//     } else {
+//       console.log(`Email sent: ${info.response}`);
+//     }
+//   });
+// };
 
 const queryTradeInfo = (merchantTradeNo) => {
   return new Promise((resolve, reject) => {

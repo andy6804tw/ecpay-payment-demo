@@ -65,12 +65,16 @@ const getPayment = (req, res) => {
 
 const results = (req, res) => {
   console.log('完成');
-  // (交易結果, 顧客交易詳細資料)
-  ecpayCtrl.sendMail(req.body, bodyData);
+  // 交易結果, 取得顧客交易詳細資料
+  ecpayCtrl.queryTradeInfo(req.body.MerchantTradeNo).then((result) => {
+    // 寄送Email
+    ecpayCtrl.sendMail(result);
+  });
   res.send('1|OK');
 };
 
 const tradeInfo = (req, res) => {
+  // 取得訂單資訊
   ecpayCtrl.queryTradeInfo(req.query.merchantTradeNo).then((result) => {
     console.log(result);
     res.send(result);
