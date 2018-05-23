@@ -482,7 +482,7 @@ const initParm = data => {
     // IgnorePayment: 'CVS#BARCODE', // 隱藏付款方式
     // OrderResultURL: 'https://77733700.ngrok.io/api/ecpay/test', // 付款完成渲染頁面
     // NeedExtraPaidInfo: '1',
-    ClientBackURL: 'https://quapni.com', // 付款完成頁面button返回商店網址
+    ClientBackURL: 'https://quapni.com/payment/3', // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
     Remark: '交易備註',
     // HoldTradeAMT: '1',
