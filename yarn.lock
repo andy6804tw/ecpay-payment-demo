@@ -2145,9 +2145,9 @@ http-signature@~1.2.0:
     jsprim "^1.2.2"
     sshpk "^1.7.0"
 
-http-status@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/http-status/-/http-status-1.0.1.tgz#dc43001a8bfc50ac87d485a892f7578964bc94a2"
+http-status@^1.1.2:
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/http-status/-/http-status-1.1.2.tgz#f9c79bf2737afb9da97e20edd8b84731875697f8"
 
 https-browserify@^1.0.0:
   version "1.0.0"

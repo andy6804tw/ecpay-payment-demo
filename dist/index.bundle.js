@@ -218,52 +218,70 @@ module.exports = require("joi");
 
 
 
+
 const app = __WEBPACK_IMPORTED_MODULE_0_express___default()();
 
 // parse body params and attache them to req.body
 app.use(__WEBPACK_IMPORTED_MODULE_1_body_parser___default.a.json());
 app.use(__WEBPACK_IMPORTED_MODULE_1_body_parser___default.a.urlencoded({ extended: true }));
+
 // enable CORS - Cross Origin Resource Sharing
 app.use(__WEBPACK_IMPORTED_MODULE_2_cors___default()());
-// HTTP request logger middleware for node.js
-app.use(__WEBPACK_IMPORTED_MODULE_3_morgan___default()('dev'));
 
-/* GET home page. */
-app.get('/', (req, res) => {
-  res.send(`server started on  port http://127.0.0.1:${__WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].port} (${__WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].env})`);
+// HTTP request logger middleware for node.js
+if (__WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].env === 'development') {
+  app.use(__WEBPACK_IMPORTED_MODULE_3_morgan___default()('dev'));
+}
+
+// prevent GET /favicon.ico
+app.use((req, res, next) => {
+  if (req.originalUrl === '/favicon.ico') {
+    res.status(204).json({ nope: true });
+  } else {
+    next();
+  }
 });
 
+// mount all routes on /api path
 app.use('/api', __WEBPACK_IMPORTED_MODULE_8__server_routes_index_route__["a" /* default */]);
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
-  console.log('1');
   let errorMessage;
+  let errorTag;
   let errorCode;
   let errorStatus;
   // express validation error 所有傳入參數驗證錯誤
   if (err instanceof __WEBPACK_IMPORTED_MODULE_5_express_validation___default.a.ValidationError) {
     if (err.errors[0].location === 'query' || err.errors[0].location === 'body') {
-      errorMessage = err.errors[0].messages;
+      errorTag = 'REQUEST_ERROR';
+      errorMessage = err.errors.map(error => {
+        return error.messages.join('. ');
+      }).join(' and ');
       errorCode = 400;
       errorStatus = __WEBPACK_IMPORTED_MODULE_4_http_status___default.a.BAD_REQUEST;
     }
-    const error = new __WEBPACK_IMPORTED_MODULE_6__server_helper_AppError__["a" /* default */].APIError(errorMessage, errorStatus, true, errorCode);
+    const error = new __WEBPACK_IMPORTED_MODULE_6__server_helper_AppError__["a" /* default */].APIError(errorStatus, errorMessage, errorTag, errorCode);
     return next(error);
   }
   return next(err);
 });
 
-// error handler, send stacktrace only during development 錯誤後最後才跑這邊
+// catch 404 and forward to error handler
+app.use((req, res, next) => {
+  const err = new __WEBPACK_IMPORTED_MODULE_6__server_helper_AppError__["a" /* default */].APIError(__WEBPACK_IMPORTED_MODULE_4_http_status___default.a.NOT_FOUND, 'API not found', 'API_NOT_FOUND', 404);
+  return next(err);
+});
+
+// error handler, send stacktrace only during development
 app.use((err, req, res, next) => {
-  console.log('2');
-  console.log(err.message);
+  // eslint-disable-line no-unused-vars
   res.status(err.status).json({
-    message: err.isPublic ? err.message : __WEBPACK_IMPORTED_MODULE_4_http_status___default.a[err.status],
-    code: err.code ? err.code : __WEBPACK_IMPORTED_MODULE_4_http_status___default.a[err.status],
+    code: err.code,
+    tag: __WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].env === 'development' ? err.tag : '',
+    message: __WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].env === 'development' ? err.message : '',
     stack: __WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].env === 'development' ? err.stack : {}
   });
-  next();
 });
 
 /* harmony default export */ __webpack_exports__["a"] = (app);
@@ -305,12 +323,12 @@ module.exports = require("express-validation");
  * @extends Error
  */
 class ExtendableError extends Error {
-  constructor(message, status, isPublic, code) {
+  constructor(status, message, tag, code) {
     super(message);
-    this.message = message;
     this.name = this.constructor.name;
+    this.message = message;
     this.status = status;
-    this.isPublic = isPublic;
+    this.tag = tag;
     this.code = code;
     this.isOperational = true; // This is required since bluebird 4 doesn't append it anymore.
     Error.captureStackTrace(this, this.constructor.name);
@@ -323,13 +341,15 @@ class ExtendableError extends Error {
  */
 class APIError extends ExtendableError {
   /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
+   * Creates an instance of APIError.
+   * @param {number} [status=httpStatus.INTERNAL_SERVER_ERROR]
+   * @param {string} message 錯誤訊息
+   * @param {string} tag 英文錯誤代號
+   * @param {number} code 錯誤代碼
+   * @memberof APIError
    */
-  constructor(message, status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, isPublic = false, code) {
-    super(message, status, isPublic, code);
+  constructor(status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, message, tag, code) {
+    super(status, message, tag, code);
     this.name = 'APIError';
   }
 }
@@ -340,55 +360,22 @@ class APIError extends ExtendableError {
  */
 class MySQLError extends ExtendableError {
   /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
+   * Creates an instance of MySQLError.
+   * @param {numner} [status=httpStatus.INTERNAL_SERVER_ERROR]
+   * @param {string} [message='Mysql 發生錯誤']
+   * @param {string} [tag='SERVER_ERROR']
+   * @param {number} [code=500]
+   * @memberof MySQLError
    */
-  constructor(message = 'Backend Error', status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, isPublic = true, code = 500) {
-    super(message, status, isPublic, code);
+  constructor(status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, message = '網路連線不穩，請稍後再試', tag = 'SERVER_ERROR', code = 500) {
+    super(status, message, tag, code);
     this.name = 'MySQLError';
-  }
-}
-
-/**
- * 信箱尚未註冊 Error
- * @extends ExtendableError
- */
-class LoginError1 extends ExtendableError {
-  /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
-   */
-  constructor(message = '信箱尚未註冊！', status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.UNAUTHORIZED, isPublic = true, code = 401) {
-    super(message, status, isPublic, code);
-    this.name = 'LoginError';
-  }
-}
-/**
- * 密碼錯誤 Error.
- * @extends ExtendableError
- */
-class LoginError2 extends ExtendableError {
-  /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
-   */
-  constructor(message = '您輸入的密碼有誤！', status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.UNAUTHORIZED, isPublic = true, code = 401) {
-    super(message, status, isPublic, code);
-    this.name = 'LoginError';
   }
 }
 
 /* harmony default export */ __webpack_exports__["a"] = ({
   APIError,
-  MySQLError,
-  LoginError1,
-  LoginError2
+  MySQLError
 });
 
 /***/ }),
@@ -468,7 +455,6 @@ let baseParam = {};
 const invParams = {};
 // 時間
 const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
-console.log(currentDateTime);
 const initParm = data => {
   baseParam = {
     MerchantTradeNo: random.RandomChar(20), // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
@@ -523,12 +509,13 @@ const results = (req, res) => {
   res.send('1|OK');
 };
 
-const tradeInfo = (req, res) => {
+const tradeInfo = (req, res, next) => {
   // 取得訂單資訊
   __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.query.merchantTradeNo).then(result => {
-    console.log(result);
     res.send(result);
-  });
+  }).catch(error => {
+    next(error);
+  }); // 失敗回傳錯誤訊息
 };
 
 const test = (req, res) => {
@@ -549,11 +536,18 @@ const test = (req, res) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helper_AppError__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http_status__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_http_status__);
+
+
+
 const nodemailer = __webpack_require__(18);
 const urlencode = __webpack_require__(19);
 const sha256 = __webpack_require__(20);
 const moment = __webpack_require__(4);
 const request = __webpack_require__(21);
+
 __webpack_require__(2).config();
 
 const sendMail = data => {
@@ -623,16 +617,13 @@ Quapni-康迪薾戶外 小組敬上`
 const queryTradeInfo = merchantTradeNo => {
   return new Promise((resolve, reject) => {
     const timestamp = moment().valueOf().toString().substring(0, 10);
-    console.log(timestamp);
     const originString = `HashKey=5294y06JbISpM5x9&MerchantID=2000132&MerchantTradeNo=${merchantTradeNo}&TimeStamp=${timestamp}&HashIV=v77hoKGq4kWxNNIS`;
 
     // 將整串字串進行 URL encode (UTF-8小寫)
     const encodeString = urlencode(originString).toLowerCase();
-    console.log(encodeString);
 
     // 以 SHA256 加密方式來產生雜凑值(大寫)
     const sh256String = sha256(encodeString).toUpperCase();
-    console.log(sh256String);
 
     const formData = {
       MerchantID: 2000132,
@@ -641,11 +632,7 @@ const queryTradeInfo = merchantTradeNo => {
       CheckMacValue: sh256String
     };
     request.post({ url: 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5', form: formData }, (err, httpResponse, body) => {
-      if (err) {
-        console.error('login failed:', err);
-      }
-      // 登入成功並取得 access_token 回傳
-      console.log(...body.split('&'));
+      // 解析訂單資料
       const result = body.split('&');
       const resultObject = result.reduce((acc, item) => {
         const key = item.split('=')[0];
@@ -653,7 +640,13 @@ const queryTradeInfo = merchantTradeNo => {
         acc[key] = value;
         return acc;
       }, {});
-      resolve(resultObject);
+      if (err) {
+        console.error('login failed:', err);
+      } else if (resultObject.TradeStatus === '10200047') {
+        reject(new __WEBPACK_IMPORTED_MODULE_0__helper_AppError__["a" /* default */].APIError(__WEBPACK_IMPORTED_MODULE_1_http_status___default.a.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus));
+      } else {
+        resolve(resultObject);
+      }
     });
   });
 };

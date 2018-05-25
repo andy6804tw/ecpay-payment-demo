@@ -17,7 +17,6 @@ let baseParam = {};
 const invParams = {};
 // 時間
 const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
-console.log(currentDateTime);
 const initParm = (data) => {
   baseParam = {
     MerchantTradeNo: random.RandomChar(20), // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
@@ -73,12 +72,11 @@ const results = (req, res) => {
   res.send('1|OK');
 };
 
-const tradeInfo = (req, res) => {
+const tradeInfo = (req, res, next) => {
   // 取得訂單資訊
   ecpayCtrl.queryTradeInfo(req.query.merchantTradeNo).then((result) => {
-    console.log(result);
     res.send(result);
-  });
+  }).catch((error) => { next(error); }); // 失敗回傳錯誤訊息
 };
 
 const test = (req, res) => {

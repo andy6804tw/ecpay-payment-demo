@@ -4,12 +4,12 @@ import httpStatus from 'http-status';
  * @extends Error
  */
 class ExtendableError extends Error {
-  constructor(message, status, isPublic, code) {
+  constructor(status, message, tag, code) {
     super(message);
-    this.message = message;
     this.name = this.constructor.name;
+    this.message = message;
     this.status = status;
-    this.isPublic = isPublic;
+    this.tag = tag;
     this.code = code;
     this.isOperational = true; // This is required since bluebird 4 doesn't append it anymore.
     Error.captureStackTrace(this, this.constructor.name);
@@ -22,13 +22,20 @@ class ExtendableError extends Error {
  */
 class APIError extends ExtendableError {
   /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
+   * Creates an instance of APIError.
+   * @param {number} [status=httpStatus.INTERNAL_SERVER_ERROR]
+   * @param {string} message 錯誤訊息
+   * @param {string} tag 英文錯誤代號
+   * @param {number} code 錯誤代碼
+   * @memberof APIError
    */
-  constructor(message, status = httpStatus.INTERNAL_SERVER_ERROR, isPublic = false, code) {
-    super(message, status, isPublic, code);
+  constructor(
+    status = httpStatus.INTERNAL_SERVER_ERROR,
+    message,
+    tag,
+    code,
+  ) {
+    super(status, message, tag, code);
     this.name = 'APIError';
   }
 }
@@ -39,54 +46,26 @@ class APIError extends ExtendableError {
  */
 class MySQLError extends ExtendableError {
   /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
+   * Creates an instance of MySQLError.
+   * @param {numner} [status=httpStatus.INTERNAL_SERVER_ERROR]
+   * @param {string} [message='Mysql 發生錯誤']
+   * @param {string} [tag='SERVER_ERROR']
+   * @param {number} [code=500]
+   * @memberof MySQLError
    */
-  constructor(message = 'Backend Error', status = httpStatus.INTERNAL_SERVER_ERROR, isPublic = true, code = 500) {
-    super(message, status, isPublic, code);
+  constructor(
+    status = httpStatus.INTERNAL_SERVER_ERROR,
+    message = '網路連線不穩，請稍後再試',
+    tag = 'SERVER_ERROR',
+    code = 500,
+  ) {
+    super(status, message, tag, code);
     this.name = 'MySQLError';
-  }
-}
-
-/**
- * 信箱尚未註冊 Error
- * @extends ExtendableError
- */
-class LoginError1 extends ExtendableError {
-  /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
-   */
-  constructor(message = '信箱尚未註冊！', status = httpStatus.UNAUTHORIZED, isPublic = true, code = 401) {
-    super(message, status, isPublic, code);
-    this.name = 'LoginError';
-  }
-}
-/**
- * 密碼錯誤 Error.
- * @extends ExtendableError
- */
-class LoginError2 extends ExtendableError {
-  /**
-   * Creates an API error.
-   * @param {string} message - Error message.
-   * @param {number} status - HTTP status code of error.
-   * @param {boolean} isPublic - Whether the message should be visible to user or not.
-   */
-  constructor(message = '您輸入的密碼有誤！', status = httpStatus.UNAUTHORIZED, isPublic = true, code = 401) {
-    super(message, status, isPublic, code);
-    this.name = 'LoginError';
   }
 }
 
 
 export default {
   APIError,
-  MySQLError,
-  LoginError1,
-  LoginError2
+  MySQLError
 };
