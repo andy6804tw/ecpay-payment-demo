@@ -61,7 +61,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 6);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -69,12 +69,12 @@ module.exports =
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_joi__ = __webpack_require__(7);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_joi__ = __webpack_require__(8);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_joi___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_joi__);
 
 
 // require and configure dotenv, will load vars in .env in process.env
-__webpack_require__(2).config();
+__webpack_require__(3).config();
 
 const envVarSchema = __WEBPACK_IMPORTED_MODULE_0_joi___default.a.object().keys({
   NODE_ENV: __WEBPACK_IMPORTED_MODULE_0_joi___default.a.string().default('development').allow(['development', 'production']), // 字串且預設值為development 並只允許兩種參數
@@ -117,28 +117,96 @@ module.exports = require("express");
 /* 2 */
 /***/ (function(module, exports) {
 
-module.exports = require("dotenv");
+module.exports = require("http-status");
 
 /***/ }),
 /* 3 */
 /***/ (function(module, exports) {
 
-module.exports = require("http-status");
+module.exports = require("dotenv");
 
 /***/ }),
 /* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_http_status__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_http_status__);
+
+
+/**
+ * @extends Error
+ */
+class ExtendableError extends Error {
+  constructor(status, message, tag, code) {
+    super(message);
+    this.name = this.constructor.name;
+    this.message = message;
+    this.status = status;
+    this.tag = tag;
+    this.code = code;
+    this.isOperational = true; // This is required since bluebird 4 doesn't append it anymore.
+    Error.captureStackTrace(this, this.constructor.name);
+  }
+}
+
+/**
+ * Class representing an API error.
+ * @extends ExtendableError
+ */
+class APIError extends ExtendableError {
+  /**
+   * Creates an instance of APIError.
+   * @param {number} [status=httpStatus.INTERNAL_SERVER_ERROR]
+   * @param {string} message 錯誤訊息
+   * @param {string} tag 英文錯誤代號
+   * @param {number} code 錯誤代碼
+   * @memberof APIError
+   */
+  constructor(status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, message, tag, code) {
+    super(status, message, tag, code);
+    this.name = 'APIError';
+  }
+}
+
+/**
+ * Class representing an MySQL error.
+ * @extends ExtendableError
+ */
+class MySQLError extends ExtendableError {
+  /**
+   * Creates an instance of MySQLError.
+   * @param {numner} [status=httpStatus.INTERNAL_SERVER_ERROR]
+   * @param {string} [message='Mysql 發生錯誤']
+   * @param {string} [tag='SERVER_ERROR']
+   * @param {number} [code=500]
+   * @memberof MySQLError
+   */
+  constructor(status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, message = '網路連線不穩，請稍後再試', tag = 'SERVER_ERROR', code = 500) {
+    super(status, message, tag, code);
+    this.name = 'MySQLError';
+  }
+}
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+  APIError,
+  MySQLError
+});
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports) {
 
 module.exports = require("moment");
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(module) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__config_config__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config_express__ = __webpack_require__(8);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__config_express__ = __webpack_require__(9);
 
 
 
@@ -150,10 +218,10 @@ if (!module.parent) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (__WEBPACK_IMPORTED_MODULE_1__config_express__["a" /* default */]);
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(6)(module)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(7)(module)))
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports) {
 
 module.exports = function(originalModule) {
@@ -183,29 +251,29 @@ module.exports = function(originalModule) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports) {
 
 module.exports = require("joi");
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_body_parser__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_body_parser__ = __webpack_require__(10);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_body_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_body_parser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cors__ = __webpack_require__(10);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cors__ = __webpack_require__(11);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_cors___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_cors__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_morgan__ = __webpack_require__(11);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_morgan__ = __webpack_require__(12);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_morgan___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_morgan__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_http_status__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_http_status__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_http_status__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_express_validation__ = __webpack_require__(12);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_express_validation__ = __webpack_require__(13);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_express_validation___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_express_validation__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__server_helper_AppError__ = __webpack_require__(13);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__server_helper_AppError__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__config__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__server_routes_index_route__ = __webpack_require__(14);
 
@@ -287,96 +355,28 @@ app.use((err, req, res, next) => {
 /* harmony default export */ __webpack_exports__["a"] = (app);
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = require("body-parser");
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 module.exports = require("cors");
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports) {
 
 module.exports = require("morgan");
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports) {
 
 module.exports = require("express-validation");
-
-/***/ }),
-/* 13 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_http_status__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_http_status__);
-
-
-/**
- * @extends Error
- */
-class ExtendableError extends Error {
-  constructor(status, message, tag, code) {
-    super(message);
-    this.name = this.constructor.name;
-    this.message = message;
-    this.status = status;
-    this.tag = tag;
-    this.code = code;
-    this.isOperational = true; // This is required since bluebird 4 doesn't append it anymore.
-    Error.captureStackTrace(this, this.constructor.name);
-  }
-}
-
-/**
- * Class representing an API error.
- * @extends ExtendableError
- */
-class APIError extends ExtendableError {
-  /**
-   * Creates an instance of APIError.
-   * @param {number} [status=httpStatus.INTERNAL_SERVER_ERROR]
-   * @param {string} message 錯誤訊息
-   * @param {string} tag 英文錯誤代號
-   * @param {number} code 錯誤代碼
-   * @memberof APIError
-   */
-  constructor(status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, message, tag, code) {
-    super(status, message, tag, code);
-    this.name = 'APIError';
-  }
-}
-
-/**
- * Class representing an MySQL error.
- * @extends ExtendableError
- */
-class MySQLError extends ExtendableError {
-  /**
-   * Creates an instance of MySQLError.
-   * @param {numner} [status=httpStatus.INTERNAL_SERVER_ERROR]
-   * @param {string} [message='Mysql 發生錯誤']
-   * @param {string} [tag='SERVER_ERROR']
-   * @param {number} [code=500]
-   * @memberof MySQLError
-   */
-  constructor(status = __WEBPACK_IMPORTED_MODULE_0_http_status___default.a.INTERNAL_SERVER_ERROR, message = '網路連線不穩，請稍後再試', tag = 'SERVER_ERROR', code = 500) {
-    super(status, message, tag, code);
-    this.name = 'MySQLError';
-  }
-}
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-  APIError,
-  MySQLError
-});
 
 /***/ }),
 /* 14 */
@@ -439,7 +439,7 @@ router.route('/test').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_contro
 
 
 const random = __webpack_require__(22);
-const moment = __webpack_require__(4);
+const moment = __webpack_require__(5);
 
 // 交易訊息
 let bodyData;
@@ -536,8 +536,8 @@ const test = (req, res) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helper_AppError__ = __webpack_require__(13);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http_status__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helper_AppError__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http_status__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_http_status__);
 
 
@@ -545,10 +545,10 @@ const test = (req, res) => {
 const nodemailer = __webpack_require__(18);
 const urlencode = __webpack_require__(19);
 const sha256 = __webpack_require__(20);
-const moment = __webpack_require__(4);
+const moment = __webpack_require__(5);
 const request = __webpack_require__(21);
 
-__webpack_require__(2).config();
+__webpack_require__(3).config();
 
 const sendMail = data => {
   const transporter = nodemailer.createTransport({
@@ -642,7 +642,7 @@ const queryTradeInfo = merchantTradeNo => {
       }, {});
       if (err) {
         console.error('login failed:', err);
-      } else if (resultObject.TradeStatus === '10200047') {
+      } else if (resultObject.TradeStatus === '10200047' || resultObject.TradeStatus === '10200073') {
         reject(new __WEBPACK_IMPORTED_MODULE_0__helper_AppError__["a" /* default */].APIError(__WEBPACK_IMPORTED_MODULE_1_http_status___default.a.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus));
       } else {
         resolve(resultObject);

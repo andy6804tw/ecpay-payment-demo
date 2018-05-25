@@ -102,7 +102,7 @@ const queryTradeInfo = (merchantTradeNo) => {
       }, {});
       if (err) {
         console.error('login failed:', err);
-      } else if (resultObject.TradeStatus === '10200047') { reject(new APPError.APIError(httpStatus.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus)); } else { resolve(resultObject); }
+      } else if (resultObject.TradeStatus === '10200047' || resultObject.TradeStatus === '10200073') { reject(new APPError.APIError(httpStatus.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus)); } else { resolve(resultObject); }
     });
   });
 };
