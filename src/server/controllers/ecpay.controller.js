@@ -34,13 +34,13 @@ const initParm = (data) => {
     // NeedExtraPaidInfo: '1',
     ClientBackURL: `https://quapni.com/payment/${merchantTradeNo}`, // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
-    Remark: '交易備註',
+    Remark: data.note,
     // HoldTradeAMT: '1',
     // StoreID: '',
     CustomField1: data.name,
     CustomField2: data.email,
     CustomField3: data.address,
-    // CustomField4: data.item,
+    CustomField4: data.note,
     EncryptType: '1', // CheckMacValue 加密類型
     ExpireDate: '7' // 允許繳費有效天數
   };

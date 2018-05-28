@@ -472,13 +472,13 @@ const initParm = data => {
     // NeedExtraPaidInfo: '1',
     ClientBackURL: `https://quapni.com/payment/${merchantTradeNo}`, // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
-    Remark: '交易備註',
+    Remark: data.note,
     // HoldTradeAMT: '1',
     // StoreID: '',
     CustomField1: data.name,
     CustomField2: data.email,
     CustomField3: data.address,
-    // CustomField4: data.item,
+    CustomField4: data.note,
     EncryptType: '1', // CheckMacValue 加密類型
     ExpireDate: '7' // 允許繳費有效天數
   };
@@ -569,7 +569,7 @@ const sendMail = data => {
     to: data.CustomField2,
     subject: 'Quapni測試信件',
     text: `${data.CustomField1} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.TradeAmt}
-訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.ItemName} \r\n 宅配地址: ${data.CustomField3} \r\n
+訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.ItemName} \r\n 宅配地址: ${data.CustomField3} \r\n 備註: ${data.CustomField4} \r\n
     
 如有任何問題，也歡迎使用客服信箱聯絡我們，我們將竭誠為您服務。
 客服信箱： service@quapni.com.tw
