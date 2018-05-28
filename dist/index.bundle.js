@@ -456,8 +456,10 @@ const invParams = {};
 // 時間
 const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
 const initParm = data => {
+  // 亂數產生訂單編號
+  const merchantTradeNo = random.RandomChar(20);
   baseParam = {
-    MerchantTradeNo: random.RandomChar(20), // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
+    MerchantTradeNo: merchantTradeNo, // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
     MerchantTradeDate: currentDateTime, // ex: YYYY/MM/DD HH:mm:ss
     TotalAmount: data.total,
     TradeDesc: 'Quapni前打輪系列',
@@ -468,7 +470,7 @@ const initParm = data => {
     // IgnorePayment: 'CVS#BARCODE', // 隱藏付款方式
     // OrderResultURL: 'https://77733700.ngrok.io/api/ecpay/test', // 付款完成渲染頁面
     // NeedExtraPaidInfo: '1',
-    ClientBackURL: 'https://quapni.com/payment/3', // 付款完成頁面button返回商店網址
+    ClientBackURL: `https://quapni.com/payment/${merchantTradeNo}`, // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
     Remark: '交易備註',
     // HoldTradeAMT: '1',
