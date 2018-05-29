@@ -12,7 +12,7 @@ router.route('/get')
 router.route('/results')
   .post(ecpayCtrl.results);
 
-router.route('/queryTradeInfo')
+router.route('/queryTradeInfo/:merchantTradeNo')
   .get(ecpayCtrl.tradeInfo);
 
 router.route('/test')

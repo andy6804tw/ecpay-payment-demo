@@ -424,7 +424,7 @@ router.route('/get').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controll
 
 router.route('/results').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].results);
 
-router.route('/queryTradeInfo').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].tradeInfo);
+router.route('/queryTradeInfo/:merchantTradeNo').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].tradeInfo);
 
 router.route('/test').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].test);
 
@@ -513,7 +513,7 @@ const results = (req, res) => {
 
 const tradeInfo = (req, res, next) => {
   // 取得訂單資訊
-  __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.query.merchantTradeNo).then(result => {
+  __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.params.merchantTradeNo).then(result => {
     res.send(result);
   }).catch(error => {
     next(error);

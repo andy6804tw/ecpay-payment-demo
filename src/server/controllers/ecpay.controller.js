@@ -76,7 +76,7 @@ const results = (req, res) => {
 
 const tradeInfo = (req, res, next) => {
   // 取得訂單資訊
-  ecpayCtrl.queryTradeInfo(req.query.merchantTradeNo).then((result) => {
+  ecpayCtrl.queryTradeInfo(req.params.merchantTradeNo).then((result) => {
     res.send(result);
   }).catch((error) => { next(error); }); // 失敗回傳錯誤訊息
 };
