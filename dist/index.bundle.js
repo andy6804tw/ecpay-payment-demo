@@ -426,6 +426,8 @@ router.route('/results').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_con
 
 router.route('/queryTradeInfo/:merchantTradeNo').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].tradeInfo);
 
+router.route('/queryTradeInfo/:merchantTradeNo').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].tradeInfo);
+
 router.route('/test').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].test);
 
 /* harmony default export */ __webpack_exports__["a"] = (router);

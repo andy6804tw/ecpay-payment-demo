@@ -15,6 +15,9 @@ router.route('/results')
 router.route('/queryTradeInfo/:merchantTradeNo')
   .get(ecpayCtrl.tradeInfo);
 
+router.route('/queryTradeInfo/:merchantTradeNo')
+  .post(ecpayCtrl.tradeInfo);
+
 router.route('/test')
   .post(ecpayCtrl.test);
 
