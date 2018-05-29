@@ -42,10 +42,10 @@ item: 山茶 CAMELLA 85T 前打捲線器
 
 **說明:** *使用訂單編號做訂單查詢*
 
-**路徑:** *`https://ecpay-payment.herokuapp.com/api/ecpay/queryTradeInfo?merchantTradeNo=訂單編號`*
+**路徑:** *`https://ecpay-payment.herokuapp.com/api/ecpay/queryTradeInfo/訂單編號`*
 
 - [範例] URL parameter 
-  - https://ecpay-payment.herokuapp.com/api/ecpay/queryTradeInfo?merchantTradeNo=vbqg6003rqrn6zace1cr
+  - https://ecpay-payment.herokuapp.com/api/ecpay/queryTradeInfo/vbqg6003rqrn6zace1cr
 
 [參考文件](https://hackmd.io/901APtwTRFCRCx1TL0byOQ)
 
