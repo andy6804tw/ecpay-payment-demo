@@ -1,5 +1,5 @@
 import random from 'crypto-string-module';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import EcpayPayment from 'ecpay-payment';
 
 import ecpayCtrl from '../modules/ecpay.module';
@@ -10,7 +10,7 @@ const invParams = {}; // 若要測試開立電子發票，請將inv_params內的
 
 const initParm = (data) => {
   const merchantTradeNo = random.RandomChar(20); // 亂數產生訂單編號
-  const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss'); // 取得交易時間
+  const currentDateTime = moment().tz('Asia/Taipei').format('YYYY/MM/DD HH:mm:ss'); // 取得交易時間
   baseParam = {
     MerchantTradeNo: merchantTradeNo, // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
     MerchantTradeDate: currentDateTime, // ex: YYYY/MM/DD HH:mm:ss

@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import nodemailer from 'nodemailer';
 import urlencode from 'urlencode';
 import sha256 from 'sha256';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import request from 'request';
 
 import APPError from '../helper/AppError';
