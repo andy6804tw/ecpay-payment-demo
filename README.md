@@ -18,7 +18,7 @@ https://ecpay-payment.herokuapp.com/
 **路徑:** *`https://ecpay-payment.herokuapp.com/ecpay/get?total=消費總金額&item=購買商品&name=購買者姓名&address=寄送地址&email=購買者信箱&note=商品備註`*
 
 - [範例] URL parameter 
-  - [https://ecpay-payment.herokuapp.com/ecpay/get?total=4200&item=山茶 CAMELLA 85T 前打捲線器&name=王小明&address=台中市&email=andy6804tw@yahoo.com.tw&note=無](https://ecpay-payment.herokuapp.com/ecpay/get?total=4200&item=山茶 CAMELLA 85T 前打捲線器&name=王小明&address=台中市&email=andy6804tw@yahoo.com.tw&note=無)
+  - [`https://ecpay-payment.herokuapp.com/ecpay/get?total=4200&item=山茶 CAMELLA 85T 前打捲線器&name=王小明&address=台中市&email=andy6804tw@yahoo.com.tw&note=無`](https://ecpay-payment.herokuapp.com/ecpay/get?total=4200&item=%E5%B1%B1%E8%8C%B6%20CAMELLA%2085T%20%E5%89%8D%E6%89%93%E6%8D%B2%E7%B7%9A%E5%99%A8&name=%E7%8E%8B%E5%B0%8F%E6%98%8E&address=%E5%8F%B0%E4%B8%AD%E5%B8%82&email=andy6804tw@yahoo.com.tw&note=%E7%84%A1)
 
 ### 2. 結帳頁面(表單傳送方法)
 **方法:** POST
@@ -42,7 +42,7 @@ note: 無
 [範例測試](https://codepen.io/andy6804tw/full/EEPQqz/)
 
 ### 3. 查詢訂單
-**方法:** GET
+**方法:** GET、POST
 
 **說明:** *使用訂單編號做訂單查詢*
 
@@ -62,16 +62,6 @@ note: 無
   - 超商代碼
 
 <img src="./Screenshot/img01.png">
-
-## 功能(Feature)
-- 付款方式
-  - 信用卡
-  - 網路 ATM
-  - ATM 櫃員機
-  - 超商條碼
-  - 超商代碼
-
-
 
 ### 信用卡付款
 

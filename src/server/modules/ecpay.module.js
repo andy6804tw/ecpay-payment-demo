@@ -5,7 +5,6 @@ import sha256 from 'sha256';
 import moment from 'moment';
 import request from 'request';
 
-import config from '../../config/config';
 import APPError from '../helper/AppError';
 
 require('dotenv').config();

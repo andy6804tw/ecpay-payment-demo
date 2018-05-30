@@ -555,9 +555,7 @@ const tradeInfo = (req, res, next) => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_request__ = __webpack_require__(21);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_request___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_request__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config_config__ = __webpack_require__(0);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__helper_AppError__ = __webpack_require__(4);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__helper_AppError__ = __webpack_require__(4);
 
 
 
@@ -844,7 +842,7 @@ const queryTradeInfo = merchantTradeNo => {
             console.error('login failed:', err);
          } else if (resultObject.TradeStatus === '10200047' || resultObject.TradeStatus === '10200073') {
             // 查無此訂單
-            reject(new __WEBPACK_IMPORTED_MODULE_7__helper_AppError__["a" /* default */].APIError(__WEBPACK_IMPORTED_MODULE_0_http_status___default.a.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus));
+            reject(new __WEBPACK_IMPORTED_MODULE_6__helper_AppError__["a" /* default */].APIError(__WEBPACK_IMPORTED_MODULE_0_http_status___default.a.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus));
          } else {
             // 查詢成功回傳資訊
             resolve(resultObject);
