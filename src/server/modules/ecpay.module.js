@@ -26,6 +26,7 @@ const sendPaymentResult = (data) => {
   const mailOptions = {
     from: `綠界金流測試 <${process.env.EMAIL}>`,
     to: data.CustomField2,
+    cc: process.env.EMAIL,
     subject: '[測試]訂單付款成功通知',
     html: `<b>您的訂單已付款完成！</b><br/>
 ${data.CustomField1} 先生/小姐您好，感謝您的訂購，我們已收到您的付款資料，待訂單確認後，盡快為您安排出貨！<br/>
