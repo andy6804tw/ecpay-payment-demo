@@ -311,7 +311,7 @@ app.use((req, res, next) => {
 });
 
 // mount all routes on /api path
-app.use('/api', __WEBPACK_IMPORTED_MODULE_8__server_routes_index_route__["a" /* default */]);
+app.use('/', __WEBPACK_IMPORTED_MODULE_8__server_routes_index_route__["a" /* default */]);
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
@@ -418,17 +418,18 @@ router.use('/ecpay', __WEBPACK_IMPORTED_MODULE_1__ecpay_route__["a" /* default *
 
 const router = __WEBPACK_IMPORTED_MODULE_0_express___default.a.Router();
 
+// POST表單傳送訂單路徑
 router.route('/').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].payment);
-
+// GET方法測試發送訂單路徑
 router.route('/get').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].getPayment);
-
-router.route('/results').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].results);
-
+// 付款結果路徑
+router.route('/payment/result').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].paymentResult);
+// 完成訂單路徑
+router.route('/order/result').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].orderResult);
+// GET方法查詢訂單
 router.route('/queryTradeInfo/:merchantTradeNo').get(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].tradeInfo);
-
+// POST方法查詢訂單
 router.route('/queryTradeInfo/:merchantTradeNo').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].tradeInfo);
-
-router.route('/test').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_controller__["a" /* default */].test);
 
 /* harmony default export */ __webpack_exports__["a"] = (router);
 
@@ -437,42 +438,39 @@ router.route('/test').post(__WEBPACK_IMPORTED_MODULE_1__controllers_ecpay_contro
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__ = __webpack_require__(17);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_crypto_string_module__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_crypto_string_module___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_crypto_string_module__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ecpay_payment__ = __webpack_require__(23);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_ecpay_payment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_ecpay_payment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__modules_ecpay_module__ = __webpack_require__(17);
 
 
-const random = __webpack_require__(22);
-const moment = __webpack_require__(5);
 
-// 交易訊息
-let bodyData;
 
-/**
- * Created by ying.wu on 2017/6/27.
- */
-const EcpayPayment = __webpack_require__(23);
-// 參數值為[PLEASE MODIFY]者，請在每次測試時給予獨特值
-// 若要測試非必帶參數請將base_param內註解的參數依需求取消註解 //
-let baseParam = {};
-// 若要測試開立電子發票，請將inv_params內的"所有"參數取消註解 //
-const invParams = {};
-// 時間
-const currentDateTime = moment().format('YYYY/MM/DD HH:mm:ss');
+
+
+let baseParam = {}; // 訂單資訊初始化
+const invParams = {}; // 若要測試開立電子發票，請將inv_params內的"所有"參數取消註解
+const currentDateTime = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format('YYYY/MM/DD HH:mm:ss'); // 取得交易時間
+
 const initParm = data => {
-  // 亂數產生訂單編號
-  const merchantTradeNo = random.RandomChar(20);
+  const merchantTradeNo = __WEBPACK_IMPORTED_MODULE_0_crypto_string_module___default.a.RandomChar(20); // 亂數產生訂單編號
   baseParam = {
     MerchantTradeNo: merchantTradeNo, // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
     MerchantTradeDate: currentDateTime, // ex: YYYY/MM/DD HH:mm:ss
     TotalAmount: data.total,
-    TradeDesc: 'Quapni前打輪系列',
+    TradeDesc: '綠界第三方支付',
     ItemName: data.item,
-    ReturnURL: 'https://ecpay-payment.herokuapp.com/api/ecpay/results', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
+    ReturnURL: 'https://ecpay-payment.herokuapp.com/ecpay/payment/result',
+    PaymentInfoURL: 'https://ecpay-payment.herokuapp.com/ecpay/order/result', // 當消費者付款完成後，綠界會將付款結果參數以幕後(Server POST)回傳到該網址。
     InvoiceMark: 'Y', // 電子發票開立註記
     // ChoosePayment: 'ALL', // 選擇預設付款方式
     // IgnorePayment: 'CVS#BARCODE', // 隱藏付款方式
     // OrderResultURL: 'https://77733700.ngrok.io/api/ecpay/test', // 付款完成渲染頁面
     // NeedExtraPaidInfo: '1',
-    ClientBackURL: `https://quapni.com/payment/${merchantTradeNo}`, // 付款完成頁面button返回商店網址
+    ClientBackURL: `http://localhost:3000/payment/${merchantTradeNo}`, // 付款完成頁面button返回商店網址
     // ItemURL: 'http://item.test.tw',
     Remark: data.note,
     // HoldTradeAMT: '1',
@@ -486,53 +484,58 @@ const initParm = data => {
   };
 };
 
+// POST 表單建立訂單資訊
 const payment = (req, res) => {
-  // initParm(req.query.total, req.query.item);
-  bodyData = req.body;
-  initParm(bodyData);
-  const create = new EcpayPayment();
+  initParm(req.body);
+  const create = new __WEBPACK_IMPORTED_MODULE_2_ecpay_payment___default.a();
   const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
-  // console.log(htm)
   res.send(htm);
 };
 
+// URL GET 建立訂單資訊
 const getPayment = (req, res) => {
   initParm(req.query);
-  const create = new EcpayPayment();
+  const create = new __WEBPACK_IMPORTED_MODULE_2_ecpay_payment___default.a();
   const htm = create.payment_client.aio_check_out_all(baseParam, invParams);
   res.send(htm);
 };
 
-const results = (req, res) => {
+const paymentResult = (req, res) => {
   console.log('完成');
   // 交易結果, 取得顧客交易詳細資料
-  __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.body.MerchantTradeNo).then(result => {
+  __WEBPACK_IMPORTED_MODULE_3__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.body.MerchantTradeNo).then(result => {
     // 寄送Email
-    __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].sendMail(result);
+    __WEBPACK_IMPORTED_MODULE_3__modules_ecpay_module__["a" /* default */].sendPaymentResult(result);
+  });
+  res.send('1|OK');
+};
+
+const orderResult = (req, res) => {
+  // 取得交易資訊
+  const orderInfo = req.body;
+  // 交易結果, 取得顧客交易詳細資料
+  __WEBPACK_IMPORTED_MODULE_3__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.body.MerchantTradeNo).then(result => {
+    // 寄送Email
+    __WEBPACK_IMPORTED_MODULE_3__modules_ecpay_module__["a" /* default */].sendOrderResult(orderInfo, result);
   });
   res.send('1|OK');
 };
 
 const tradeInfo = (req, res, next) => {
   // 取得訂單資訊
-  __WEBPACK_IMPORTED_MODULE_0__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.params.merchantTradeNo).then(result => {
+  __WEBPACK_IMPORTED_MODULE_3__modules_ecpay_module__["a" /* default */].queryTradeInfo(req.params.merchantTradeNo).then(result => {
     res.send(result);
   }).catch(error => {
     next(error);
   }); // 失敗回傳錯誤訊息
 };
 
-const test = (req, res) => {
-  res.location('http://192.168.11.5:3000/checkout');
-  res.sendStatus(302);
-};
-
 /* harmony default export */ __webpack_exports__["a"] = ({
   payment,
   getPayment,
-  results,
-  tradeInfo,
-  test
+  paymentResult,
+  orderResult,
+  tradeInfo
 });
 
 /***/ }),
@@ -540,122 +543,317 @@ const test = (req, res) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helper_AppError__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http_status__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_http_status__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_http_status__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_http_status___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_http_status__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_nodemailer__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_nodemailer___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_nodemailer__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_urlencode__ = __webpack_require__(19);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_urlencode___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_urlencode__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_sha256__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3_sha256___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3_sha256__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4_moment___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4_moment__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_request__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5_request___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5_request__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config_config__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__helper_AppError__ = __webpack_require__(4);
 
 
 
-const nodemailer = __webpack_require__(18);
-const urlencode = __webpack_require__(19);
-const sha256 = __webpack_require__(20);
-const moment = __webpack_require__(5);
-const request = __webpack_require__(21);
+
+
+
+
+
+
 
 __webpack_require__(3).config();
 
-const sendMail = data => {
-  const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    auth: {
-      type: 'OAuth2',
-      user: process.env.EMAIL,
-      clientId: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SERECT,
-      refreshToken: process.env.REFLESH_TOKEN
-    }
-  });
-  // Setup mail configuration
-  const mailOptions = {
-    from: `Quapni-康迪薾戶外 <${process.env.EMAIL}>`,
-    to: data.CustomField2,
-    subject: 'Quapni測試信件',
-    text: `${data.CustomField1} (先生/小姐)您好！ 此封郵件是購買信件測試寄送，「故此交易作廢」。 \r\n\r\n 交易金額: ${data.TradeAmt}
-訂單編號: ${data.MerchantTradeNo} \r\n 購買商品: ${data.ItemName} \r\n 宅配地址: ${data.CustomField3} \r\n 備註: ${data.CustomField4} \r\n
-    
-如有任何問題，也歡迎使用客服信箱聯絡我們，我們將竭誠為您服務。
-客服信箱： service@quapni.com.tw
-聯絡電話： 04-25605778
-官網: https://quapni.com/
-FB粉絲團: https://www.facebook.com/quapni
-
-Quapni-康迪薾戶外 小組敬上`
-  };
-  // send mail
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log(`Email sent: ${info.response}`);
-    }
-  });
-};
-// const sendMail = (body) => {
-//   const transporter = nodemailer.createTransport({
-//     host: 'smtp.gmail.com',
-//     auth: {
-//       type: 'OAuth2',
-//       user: process.env.EMAIL,
-//       clientId: process.env.CLIENT_ID,
-//       clientSecret: process.env.CLIENT_SERECT,
-//       refreshToken: process.env.REFLESH_TOKEN
-//     }
-//   });
-//   // Setup mail configuration
-//   const mailOptions = {
-//     from: `Quapni-康迪薾戶外 <${process.env.EMAIL}>`,
-//     to: 'andy6804tw@yahoo.com.tw',
-//     subject: 'Quapni測試信件',
-//     text: `${body}\r\n${JSON.stringify(body)}`
-//   };
-//   // send mail
-//   transporter.sendMail(mailOptions, (error, info) => {
-//     if (error) {
-//       console.log(error);
-//     } else {
-//       console.log(`Email sent: ${info.response}`);
-//     }
-//   });
-// };
-
-const queryTradeInfo = merchantTradeNo => {
-  return new Promise((resolve, reject) => {
-    const timestamp = moment().valueOf().toString().substring(0, 10);
-    const originString = `HashKey=5294y06JbISpM5x9&MerchantID=2000132&MerchantTradeNo=${merchantTradeNo}&TimeStamp=${timestamp}&HashIV=v77hoKGq4kWxNNIS`;
-
-    // 將整串字串進行 URL encode (UTF-8小寫)
-    const encodeString = urlencode(originString).toLowerCase();
-
-    // 以 SHA256 加密方式來產生雜凑值(大寫)
-    const sh256String = sha256(encodeString).toUpperCase();
-
-    const formData = {
-      MerchantID: 2000132,
-      MerchantTradeNo: merchantTradeNo,
-      TimeStamp: timestamp,
-      CheckMacValue: sh256String
-    };
-    request.post({ url: 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5', form: formData }, (err, httpResponse, body) => {
-      // 解析訂單資料
-      const result = body.split('&');
-      const resultObject = result.reduce((acc, item) => {
-        const key = item.split('=')[0];
-        const value = item.split('=')[1];
-        acc[key] = value;
-        return acc;
-      }, {});
-      if (err) {
-        console.error('login failed:', err);
-      } else if (resultObject.TradeStatus === '10200047' || resultObject.TradeStatus === '10200073') {
-        reject(new __WEBPACK_IMPORTED_MODULE_0__helper_AppError__["a" /* default */].APIError(__WEBPACK_IMPORTED_MODULE_1_http_status___default.a.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus));
-      } else {
-        resolve(resultObject);
+/** 付款完成寄送結帳資訊 */
+const sendPaymentResult = data => {
+   // 寄件者 config 設定
+   const transporter = __WEBPACK_IMPORTED_MODULE_1_nodemailer___default.a.createTransport({
+      host: 'smtp.gmail.com',
+      auth: {
+         type: 'OAuth2',
+         user: process.env.EMAIL,
+         clientId: process.env.CLIENT_ID,
+         clientSecret: process.env.CLIENT_SERECT,
+         refreshToken: process.env.REFLESH_TOKEN
       }
-    });
-  });
+   });
+   // 信件內容
+   const mailOptions = {
+      from: `綠界金流測試 <${process.env.EMAIL}>`,
+      to: data.CustomField2,
+      subject: '[測試]訂單付款成功通知',
+      html: `<b>您的訂單已付款完成！</b><br/>
+${data.CustomField1} 先生/小姐您好，感謝您的訂購，我們已收到您的付款資料，待訂單確認後，盡快為您安排出貨！<br/>
+您可以至<a href="https://quapni.com/" target="_blank">訂單查詢</a>瞭解訂單詳情與處理進度。<br/><br/> 
+交易金額: ${data.TradeAmt}<br/>
+訂單編號: ${data.MerchantTradeNo}<br/>
+購買商品: ${data.ItemName}<br/>
+宅配地址: ${data.CustomField3}<br/>備註: ${data.CustomField4}<br/><br/>
+<span style="color:red;">[防詐騙提醒]</span> 若您接獲任何電話要您依照指示操作ATM，提供剩額、變更付款方式或更改分期設定等，請不要依電話指示操作，建議您直接與本公司客服中心聯繫確認，謝謝您！<br/><br/><br/>
+    
+<span style="color:red;font-size:13px;">請注意：此郵件是系統自動傳送，請勿直接回覆！</span>
+`
+   };
+   // 傳送 Email
+   transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+         console.log(error);
+      } else {
+         console.log(`Email sent: ${info.response}`);
+      }
+   });
 };
 
-/* harmony default export */ __webpack_exports__["a"] = ({ sendMail, queryTradeInfo });
+const tableContext = (orderInfo, data) => {
+   if (orderInfo.PaymentType === 'CVS_CVS') {
+      return `<table border="0" align="center" cellpadding="0" cellspacing="0" style="border-radius: 5px;line-height: 2em;border-top: 3px solid #CCC;border-bottom: 3px solid #CCC;">
+   <colgroup>
+      <col width="30%">
+      <col width="60%">
+   </colgroup>
+   <tbody>
+      <tr>
+         <td style="color:#b28045;">
+            訂單編號
+         </td>
+         <td>
+            ${data.MerchantTradeNo}
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            商店名稱
+         </td>
+         <td>
+            綠界金流測試
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            商品明細
+         </td>
+         <td>
+            ${data.ItemName}<br>                            
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            訂單金額<br>
+         </td>
+         <td>
+            ${data.TradeAmt} 元 <br>
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            付款方式
+         </td>
+         <td>
+            超商代碼
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            繳費截止日期
+         </td>
+         <td style="color:red;">
+            ${orderInfo.ExpireDate}
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            超商繳費代碼<br/>
+            <a href="https://www-stage.ecpay.com.tw/Service/pay_way_cvpay" style="color:red;cursor: pointer;font-size=8px;">(繳費流程說明)</a>
+         </td>
+         <td style="font-weight: bold;">
+            ${orderInfo.PaymentNo}
+         </td>
+      </tr>
+   </tbody>
+</table>
+<br/>
+<h4 style="color:red;">
+      注意事項：
+   </h4>
+超商代收-代碼的繳費期限為7天，請務必於期限內進行繳款。 <br/>
+例：08/01的20:15分購買商品，繳費期限為7天，表示8/08的20:15分前您必須前往繳費。<br/><br/>`;
+   }
+   return `<table border="0" align="center" cellpadding="0" cellspacing="0" style="border-radius: 5px;line-height: 2em;border-top: 3px solid #CCC;border-bottom: 3px solid #CCC;">
+   <colgroup>
+      <col width="30%">
+      <col width="60%">
+   </colgroup>
+   <tbody>
+      <tr>
+         <td style="color:#b28045;">
+            訂單編號
+         </td>
+         <td>
+            ${data.MerchantTradeNo}
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            商店名稱
+         </td>
+         <td>
+            綠界金流測試
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            商品明細
+         </td>
+         <td>
+            ${data.ItemName}<br>                            
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            訂單金額<br>
+         </td>
+         <td>
+            ${data.TradeAmt} 元 <br>
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            付款方式
+         </td>
+         <td>
+            ATM 櫃員機
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            銀行代碼
+         </td>
+         <td>
+            ${orderInfo.BankCode}
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            ATM繳費帳號
+         </td>
+         <td style="font-weight: bold;">
+            ${orderInfo.vAccount}
+         </td>
+      </tr>
+      <tr>
+         <td style="color:#b28045;">
+            繳費截止日期
+         </td>
+         <td style="color:red;">
+            ${orderInfo.ExpireDate} 23:59:59
+         </td>
+      </tr>
+   </tbody>
+</table>
+<!-- 注意事項 -->
+<div class="message margin_t30">
+   <h4 style="color:red;">
+      注意事項：
+   </h4>
+   <ol>
+      <li>轉帳成功後，系統將於成功後的1至2個小時，發送繳款成功通知至收款方。</li>
+      <li>若您於此段時間未收到「繳款成功通知」，請於上班時間來電或利用官網的線上回報通報客服。</li>
+      <li>晚上 12 點至凌晨 1 點之間為銀行固定維護時間，如於此期間進行轉帳，將於凌晨 1 點後入帳。</li>
+      <li>若使用ATM櫃員機，可選擇轉帳 / 轉出 ( 繳費單筆上限3萬元 ) 或繳費 ( 無上限3萬元限制 ) 之功能按鈕；若為使用第一銀行ATM櫃員機，請選擇「繳費」按鈕。<a style="cursor: pointer" href="https://payment-stage.ecpay.com.tw/Content/themes/WebStyle/images/firstbank_atm.png" target="_blank" >(示意圖)</a></li>
+      <li>適用【繳費】功能之銀行ATM櫃員機：台新銀行、玉山銀行、中國信託、華南銀行、第一銀行、富邦銀行、台灣銀行、土地銀行、彰化銀行、永豐銀行、國泰世華、大眾銀行。(無上限3萬元限制)</li>
+      <li>各銀行ATM繳款帳號，若金額錯誤、逾期繳費、重覆繳款，是經由銀行端機制進行檢核ATM繳款帳號資訊，綠界科技無法進行金額錯誤、逾期繳費、重覆繳款的訂單阻擋。</li>
+   </ol>
+</div><br/><br/>`;
+};
+
+/** 付款完成寄送結帳資訊 */
+const sendOrderResult = (orderInfo, data) => {
+   // 寄件者 config 設定
+   const transporter = __WEBPACK_IMPORTED_MODULE_1_nodemailer___default.a.createTransport({
+      host: 'smtp.gmail.com',
+      auth: {
+         type: 'OAuth2',
+         user: process.env.EMAIL,
+         clientId: process.env.CLIENT_ID,
+         clientSecret: process.env.CLIENT_SERECT,
+         refreshToken: process.env.REFLESH_TOKEN
+      }
+   });
+   // 取得表格內容
+   const TABLE = tableContext(orderInfo, data);
+   // 信件內容
+   const mailOptions = {
+      from: `綠界金流測試 <${process.env.EMAIL}>`,
+      to: data.CustomField2,
+      subject: `[測試]購買清單(訂單編號: ${data.MerchantTradeNo})`,
+      html: `親愛的 顧客 您好：<br/>
+
+已收到您的訂購資訊，感謝您訂購產品！本通知函只是通知您本系統已收到您的訂購訊息、並供您再次自行核對之用，不代表交易已完成。<br/>
+<span style="color:red;">[防詐騙提醒]</span> 若您接獲任何電話要您依照指示操作ATM，提供剩額、變更付款方式或更改分期設定等，請不要依電話指示操作，建議您直接與本公司客服中心聯繫確認，謝謝您！<br/><br/><br/>
+<!-- table表單 -->
+${TABLE}
+<span style="color:red;font-size:13px;">請注意：此郵件是系統自動傳送，請勿直接回覆！</span>
+`
+   };
+   // 傳送 Email
+   transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+         console.log(error);
+      } else {
+         console.log(`Email sent: ${info.response}`);
+      }
+   });
+};
+
+/** 訂單編號查詢綠界訂單資訊 */
+const queryTradeInfo = merchantTradeNo => {
+   return new Promise((resolve, reject) => {
+      // 取得目前時間戳記
+      const timestamp = __WEBPACK_IMPORTED_MODULE_4_moment___default()().valueOf().toString().substring(0, 10);
+      const originString = `HashKey=5294y06JbISpM5x9&MerchantID=2000132&MerchantTradeNo=${merchantTradeNo}&TimeStamp=${timestamp}&HashIV=v77hoKGq4kWxNNIS`;
+
+      // 將整串字串進行 URL encode (UTF-8小寫)
+      const encodeString = __WEBPACK_IMPORTED_MODULE_2_urlencode___default()(originString).toLowerCase();
+
+      // 以 SHA256 加密方式來產生雜凑值(大寫)
+      const sh256String = __WEBPACK_IMPORTED_MODULE_3_sha256___default()(encodeString).toUpperCase();
+
+      const formData = {
+         MerchantID: '2000132',
+         MerchantTradeNo: merchantTradeNo,
+         TimeStamp: timestamp,
+         CheckMacValue: sh256String
+      };
+      // 測試 https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5
+      // 上線 https://payment.ecpay.com.tw/Cashier/QueryTradeInfo/V5
+      __WEBPACK_IMPORTED_MODULE_5_request___default.a.post({ url: 'https://payment-stage.ecpay.com.tw/Cashier/QueryTradeInfo/V5', form: formData }, (err, httpResponse, body) => {
+         // 解析訂單資料(字串轉JSON)
+         const result = body.split('&');
+         const resultObject = result.reduce((acc, item) => {
+            const key = item.split('=')[0];
+            const value = item.split('=')[1];
+            acc[key] = value;
+            return acc;
+         }, {});
+         if (err) {
+            console.error('login failed:', err);
+         } else if (resultObject.TradeStatus === '10200047' || resultObject.TradeStatus === '10200073') {
+            // 查無此訂單
+            reject(new __WEBPACK_IMPORTED_MODULE_7__helper_AppError__["a" /* default */].APIError(__WEBPACK_IMPORTED_MODULE_0_http_status___default.a.BAD_REQUEST, '查無此訂單編號資料', '綠界訂單查詢', resultObject.TradeStatus));
+         } else {
+            // 查詢成功回傳資訊
+            resolve(resultObject);
+         }
+      });
+   });
+};
+
+/* harmony default export */ __webpack_exports__["a"] = ({ sendPaymentResult, sendOrderResult, queryTradeInfo });
 
 /***/ }),
 /* 18 */

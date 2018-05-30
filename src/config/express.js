@@ -33,7 +33,7 @@ app.use((req, res, next) => {
 });
 
 // mount all routes on /api path
-app.use('/api', index);
+app.use('/', index);
 
 // if error is not an instanceOf APIError, convert it.
 app.use((err, req, res, next) => {
