@@ -453,10 +453,10 @@ router.route('/queryTradeInfo/:merchantTradeNo').post(__WEBPACK_IMPORTED_MODULE_
 
 let baseParam = {}; // 訂單資訊初始化
 const invParams = {}; // 若要測試開立電子發票，請將inv_params內的"所有"參數取消註解
-const currentDateTime = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format('YYYY/MM/DD HH:mm:ss'); // 取得交易時間
 
 const initParm = data => {
   const merchantTradeNo = __WEBPACK_IMPORTED_MODULE_0_crypto_string_module___default.a.RandomChar(20); // 亂數產生訂單編號
+  const currentDateTime = __WEBPACK_IMPORTED_MODULE_1_moment___default()().format('YYYY/MM/DD HH:mm:ss'); // 取得交易時間
   baseParam = {
     MerchantTradeNo: merchantTradeNo, // 請帶20碼uid, ex: f0a0d7e9fae1bb72bc93
     MerchantTradeDate: currentDateTime, // ex: YYYY/MM/DD HH:mm:ss
